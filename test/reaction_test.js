@@ -205,8 +205,9 @@ describe("setting the values of atoms in a reaction phase", () => {
     // iteratively calculate square root x of n to d decimal places
 
     const n = atom(16);
-    const x = atom(1);
     const d = atom(4);
+
+    const x = atom(1);
 
     const calcError = _.lift((n, x) => (n - Math.pow(x, 2)) / (x * 2));
     const decimalPlaces = (n, d) => Math.round((n * Math.pow(10, d))) / Math.pow(10, d);

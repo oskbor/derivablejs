@@ -125,7 +125,33 @@ function atom_createPrototype (havelock, opts) {
         return getState(transactions_currentTransaction(TXN_CTX), this);
       }
       return this._value;
-    }
+    },
+
+    // protect this derivable from stack overflows if it is in a cycle
+    protect: function (maxDepth, overflowValue) {
+      var protectedThis = this._clone();
+      var _set = protectedThis.set;
+      var i = 0;
+      var cache = overflowValue;
+      var doCache = arguments.length === 1;
+      protectedThis.set = function (value) {
+        if (i < maxDepth) {
+          try {
+            i++;
+            if (doCache) {
+              cache = value;
+            }
+            _set.call(protectedThis, value);
+          } finally {
+            i--;
+          }
+        }
+        // won't trigger update if same as before
+        _set.call(protectedThis, cache);
+      };
+
+      return protectedThis;
+    },
   };
 }
 

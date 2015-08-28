@@ -183,3 +183,18 @@ describe("derivations inside a transaction", () => {
     assert.strictEqual(plusOne.get(), 1);
   });
 });
+
+
+describe("setting the values of atoms in a reaction phase", () => {
+  it("is ok as long as no infinitely-repeating cycles are created", () => {
+
+    const char = atom("c");
+    const chars = atom("").protect(5);
+
+    chars.react(() => {
+      chars.set(chars.get() + char.get());
+    });
+
+    assert.strictEqual(chars.get(), "ccccc");
+  });
+})
