@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "outFile": "dist/derivable.js",
+        "module": "es2015",
+        "target":"es5",
+        "allowJs": true
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var umdIfy = require('./umd-ify');
 var uglify = require('uglify-js');
+var typescript = require('@alexlur/rollup-plugin-typescript');
 
 function _writeBundle(bundle, filename) {
   fs.writeFileSync(filename, bundle.code + '\n//# sourceMappingURL=' + filename.split('/').pop() + '.map');
@@ -54,7 +55,10 @@ module.exports = function (entry, destDir) {
       // The bundle's starting point. This file will be
       // included, along with the minimum necessary code
       // from its dependencies
-      entry: entry
+      entry: entry,
+      plugins: [
+        typescript()
+      ]
     })
     .then(function (bundle) {
       // Alternatively, let Rollup do it for you
@@ -86,5 +90,5 @@ module.exports = function (entry, destDir) {
 };
 
 if (require.main === module) {
-  module.exports('src/index.js', 'dist');
+  module.exports('src/index.ts', 'dist');
 }
