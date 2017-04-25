@@ -119,7 +119,7 @@ export function detach (parent, child) {
   }
 }
 
-export function derive (f, a, b, c, d) {
+export function derive (f, a?, b?, c?, d?, e?) {
   if (f instanceof Array) {
     // Template string tag for derivable strings
     var args = util.slice(arguments, 1);

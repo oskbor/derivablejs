@@ -1,8 +1,8 @@
 export var keys = Object.keys;
 
-export function assign (obj) {
-  for (var i = 1; i < arguments.length; i++) {
-    var other = arguments[i];
+export function assign (obj, ...args) {
+  for (var i = 0; i < args.length; i++) {
+    var other = args[i];
     var ks = keys(other || {});
     for (var j = ks.length; j--;) {
       var prop = ks[j];
