@@ -3,13 +3,14 @@ import {makeReactor} from './reactors';
 import * as types from './types';
 import {derive as _derive} from './module';
 import {unpack} from './unpack';
+import {Derivable} from '../derivable';
 
 export var derivablePrototype = {
     /**
      * Creates a derived value whose state will always be f applied to this
      * value
      */
-  derive: function (f, a, b, c, d) {
+  derive: function (f: string | number | Function | RegExp | Derivable<any>, a?, b?, c?, d?) {
     var that = this;
     switch (arguments.length) {
     case 0:
@@ -21,7 +22,7 @@ export var derivablePrototype = {
         case 'string':
         case 'number':
           return _derive(function () {
-            return that.get()[f];
+            return that.get()[<string | number> f];
           });
         default:
           if (f instanceof Array) {
@@ -34,7 +35,7 @@ export var derivablePrototype = {
             });
           } else if (types.isDerivable(f)) {
             return _derive(function () {
-              var deriver = f.get();
+              var deriver = (f as Derivable<any>).get();
               var thing = that.get();
               switch (typeof deriver) {
                 case 'function':
@@ -149,20 +150,20 @@ export var derivablePrototype = {
   __equals: function (a, b) {
     return (this._equals || util.equals)(a, b);
   },
-};
 
-derivablePrototype.switch = function () {
-  var args = arguments;
-  var that = this;
-  return this.derive(function (x) {
-    var i;
-    for (i = 0; i < args.length-1; i+=2) {
-      if (that.__equals(x, unpack(args[i]))) {
-        return unpack(args[i+1]);
+  switch: function () {
+    var args = arguments;
+    var that = this;
+    return this.derive(function (x) {
+      var i;
+      for (i = 0; i < args.length-1; i+=2) {
+        if (that.__equals(x, unpack(args[i]))) {
+          return unpack(args[i+1]);
+        }
       }
-    }
-    if (i === args.length - 1) {
-      return unpack(args[i]);
-    }
-  });
+      if (i === args.length - 1) {
+        return unpack(args[i]);
+      }
+    });
+  }
 };
